@@ -11,4 +11,10 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    // Exclude backend folder from frontend build
+    rollupOptions: {
+      external: [/^\/backend\//],
+    },
+  },
 });
