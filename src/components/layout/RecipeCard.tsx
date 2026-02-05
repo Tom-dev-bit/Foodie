@@ -5,6 +5,7 @@ import { Badge } from "../ui/badge";
 import { Clock, Users } from "lucide-react";
 import { Button } from "../ui/button";
 import { getTranslatedTitle } from "@/lib/getTranslatedTitle";
+import { useInView } from "@/hooks/useInView";
 
 type RecipeProps = {
   recipe: Recipe;
@@ -12,8 +13,12 @@ type RecipeProps = {
 
 const RecipeCard: FC<RecipeProps> = ({ recipe }) => {
   const [hungarianTitle, setHungarianTitle] = useState<string>(recipe.title);
+  const { ref, hasBeenInView } = useInView({ threshold: 0.1 });
 
   useEffect(() => {
+    // Only translate when card becomes visible for the first time
+    if (!hasBeenInView) return;
+
     const fetchTitleTranslation = async () => {
       try {
         const translatedTitle = await getTranslatedTitle(recipe.title);
@@ -24,10 +29,13 @@ const RecipeCard: FC<RecipeProps> = ({ recipe }) => {
     };
 
     fetchTitleTranslation();
-  }, []);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasBeenInView, recipe.title]);
 
   return (
     <Card
+      ref={ref}
       key={recipe.id}
       className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group"
     >
@@ -36,6 +44,7 @@ const RecipeCard: FC<RecipeProps> = ({ recipe }) => {
           <img
             src={recipe.image}
             alt={hungarianTitle}
+            loading="lazy"
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
           <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
