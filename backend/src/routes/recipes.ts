@@ -1,14 +1,15 @@
 import { Hono } from "hono";
+import type { AppVariables, SearchParams } from "../types";
 
-const app = new Hono();
+const app = new Hono<{ Variables: AppVariables }>();
 
 const apiKey = process.env.SPOONACULAR_API_KEY;
 
 // Search recipes
 app.post("/search", async (context) => {
   try {
-    const body = await context.req.json();
-    const { query, cuisine, diet, intolerances } = body;
+    const body = await context.req.json<SearchParams>();
+    const { query, offset } = body;
 
     if (!query) {
       return context.json({ error: "Query parameter is required" }, 400);
@@ -21,12 +22,9 @@ app.post("/search", async (context) => {
     // Build query parameters
     const params = new URLSearchParams({
       apiKey,
-      query,
-      number: "10",
+      query: context.get("translatedQuery") ?? query,
+      offset: (offset ?? 0).toString(),
       addRecipeInformation: "true",
-      ...(cuisine && { cuisine }),
-      ...(diet && { diet }),
-      ...(intolerances && { intolerances }),
     });
 
     const response = await fetch(

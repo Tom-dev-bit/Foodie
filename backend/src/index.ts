@@ -2,8 +2,10 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import recipeRoutes from "./routes/recipes";
+import { checkTranslation } from "./middleware/checkTranslation";
+import type { AppVariables } from "./types";
 
-const app = new Hono();
+const app = new Hono<{ Variables: AppVariables }>();
 
 // Middleware
 app.use("*", logger());
@@ -19,6 +21,9 @@ app.use(
 app.get("/health", (c) => {
   return c.json({ status: "ok", timestamp: new Date().toISOString() });
 });
+
+// Translater middleware for all routes
+app.use("*", checkTranslation);
 
 // Routes
 app.route("/api/recipes", recipeRoutes);

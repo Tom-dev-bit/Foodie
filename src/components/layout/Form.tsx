@@ -1,27 +1,46 @@
-import { useState, type SubmitEventHandler } from "react";
+import {
+  useState,
+  type Dispatch,
+  type SetStateAction,
+  type SubmitEventHandler,
+} from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { toast } from "sonner";
+import type { RecipesResponse } from "@/types/recipes";
+import { getRecipes } from "@/lib/getRecipes";
 
-const Form = () => {
+type FormProps = {
+  setTab: Dispatch<SetStateAction<"search" | "recipes">>;
+  setRecipes: Dispatch<SetStateAction<RecipesResponse | null>>;
+  setSearchQuery: Dispatch<SetStateAction<string>>;
+};
+
+const Form = ({ setTab, setRecipes, setSearchQuery }: FormProps) => {
   const [food, setFood] = useState("");
 
   const handleSubmit: SubmitEventHandler = async (event) => {
     event.preventDefault();
 
-    toast.promise(
-      () =>
-        fetch(`${import.meta.env.VITE_BACKEND_URL}/api/recipes/search`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: food }),
-        }),
-      {
+    toast
+      .promise(() => getRecipes(0, food), {
         loading: "Recept lekérése...",
         success: "Recept sikeresen lekérve!",
         error: "Hiba történt a recept lekérése során.",
-      },
-    );
+      })
+      .unwrap()
+      .then(async (response) => {
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || "Failed to fetch recipes");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setRecipes(data);
+        setSearchQuery(food);
+        setTab("recipes");
+      });
   };
 
   return (
