@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import recipeRoutes from "./routes/recipes";
+import translationRoutes from "./routes/translation";
 import { checkTranslation } from "./middleware/checkTranslation";
 import type { AppVariables } from "./types";
 
@@ -21,6 +22,8 @@ app.use(
 app.get("/health", (c) => {
   return c.json({ status: "ok", timestamp: new Date().toISOString() });
 });
+
+app.route("/api/translation", translationRoutes);
 
 // Translater middleware for all routes
 app.use("*", checkTranslation);

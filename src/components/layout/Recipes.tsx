@@ -1,6 +1,10 @@
-import { Card, CardContent, CardFooter, CardHeader } from "../ui/card";
-import { Badge } from "../ui/badge";
+import { getRecipes } from "@/lib/getRecipes";
+import type { RecipesResponse } from "@/types/recipes";
+import { ArrowLeft } from "lucide-react";
+import { useEffect, useState, type Dispatch, type SetStateAction } from "react";
+import { toast } from "sonner";
 import { Button } from "../ui/button";
+import { Card, CardContent, CardHeader } from "../ui/card";
 import {
   Pagination,
   PaginationContent,
@@ -10,11 +14,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "../ui/pagination";
-import type { RecipesResponse } from "@/types/recipes";
-import { Clock, Users, ArrowLeft } from "lucide-react";
-import { useState, useEffect, type Dispatch, type SetStateAction } from "react";
-import { getRecipes } from "@/lib/getRecipes";
-import { toast } from "sonner";
+import RecipeCard from "./RecipeCard";
 
 type RecipesProps = {
   recipes: RecipesResponse | null;
@@ -86,7 +86,7 @@ const Recipes = ({
   }
 
   return (
-    <div className="max-w-6xl mx-auto p-6">
+    <div className="w-full mx-auto p-6">
       <div className="mb-6 flex items-center justify-between">
         <Button variant="ghost" onClick={() => setTab("search")}>
           <ArrowLeft className="mr-2 h-4 w-4" />
@@ -115,56 +115,7 @@ const Recipes = ({
               </Card>
             ))
           : recipes.results.map((recipe) => (
-              <Card
-                key={recipe.id}
-                className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group"
-              >
-                <CardHeader className="p-0">
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={recipe.image}
-                      alt={recipe.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent" />
-                  </div>
-                </CardHeader>
-
-                <CardContent className="p-4">
-                  <h3 className="font-semibold text-lg mb-3 line-clamp-2 min-h-14">
-                    {recipe.title}
-                  </h3>
-
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    <Badge
-                      variant="secondary"
-                      className="flex items-center gap-1"
-                    >
-                      <Clock className="h-3 w-3" />
-                      {recipe.readyInMinutes} perc
-                    </Badge>
-                    <Badge
-                      variant="secondary"
-                      className="flex items-center gap-1"
-                    >
-                      <Users className="h-3 w-3" />
-                      {recipe.servings} adag
-                    </Badge>
-                  </div>
-
-                  {recipe.sourceName && (
-                    <p className="text-sm text-muted-foreground">
-                      Forrás: {recipe.sourceName}
-                    </p>
-                  )}
-                </CardContent>
-
-                <CardFooter className="p-4 pt-0">
-                  <Button className="w-full" variant="outline">
-                    Recept megtekintése
-                  </Button>
-                </CardFooter>
-              </Card>
+              <RecipeCard key={recipe.id} recipe={recipe} />
             ))}
       </div>
 
