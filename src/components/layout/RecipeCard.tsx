@@ -75,8 +75,14 @@ const RecipeCard: FC<RecipeProps> = ({ recipe }) => {
       </CardContent>
 
       <CardFooter className="p-4 pt-0">
-        <Button className="w-full" variant="outline">
-          Recept megtekintése
+        <Button className="w-full" variant="outline" asChild>
+          <a
+            href={`https://www.google.com/search?q=${encodeURIComponent(hungarianTitle + " recept")}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Recept megtekintése
+          </a>
         </Button>
       </CardFooter>
     </Card>
