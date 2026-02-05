@@ -92,7 +92,7 @@ const Recipes = ({
           <ArrowLeft className="mr-2 h-4 w-4" />
         </Button>
         <p className="text-muted-foreground">
-          {recipes.results.length} recept találva
+          {recipes.totalResults} recept találva
         </p>
       </div>
 
