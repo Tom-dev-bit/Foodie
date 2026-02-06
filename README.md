@@ -1,73 +1,29 @@
-# React + TypeScript + Vite
+# Foodie
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Just a random food lookup app built with React, Hono and Vite. It uses the Spoonacular API to fetch recipes and the Google Translate API to translate recipe titles and search input to Hungarian.
 
-Currently, two official plugins are available:
+## Why?
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+My girlfriend and I always have trouble figuring out what to cook, this was my attempt at solving that problem. And the reason behind the title translation was that my girlfirend doesn't speak english, so how the app works is the landing page's search input accepts hungarian words, then on submit the backend has a middleware that sends the input's text to the Google Translation API and translates it to english, then the translated text is sent to the Spoonacular API and the results are sent back to the frontend, where the recipe titles are translated back to hungarian and displayed on the cards.
 
-## React Compiler
+## Features
 
-The React Compiler is currently not compatible with SWC. See [this issue](https://github.com/vitejs/vite-plugin-react/issues/428) for tracking the progress.
+- Search for recipes by name or "category" (e.g. "chicken", "pasta", "soup", etc.)
+- View recipe details by clicking on the recipe card, which opens a Google search for the recipe
+- Spoonacular API integration for fetching recipes
+- Google Translate API integration for translating recipe titles to Hungarian
+- Translation on scroll for better performance and user experience ( and lower API costs lol )
+- NO RESPONSIVE DESIGN
 
-## Expanding the ESLint configuration
+## Tech Stack
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- React with TypeScript for the frontend ( Intersection Observer API for lazy translation )
+- Hono for the backend API
+- Vite for bundling the frontend
+- Tailwind CSS & Shadcn UI for styling
+- Spoonacular API for recipe data
+- Google Translate API for translation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Reason behind abandonment
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+My girlfriend thought the idea was dumb. Because the reason we can't find anything to cook is because we're lazy and actually dont know how to cook, not because we can't find recipes. So yeah, RIP.
